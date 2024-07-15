@@ -12,14 +12,15 @@ class ZXingAutofocusScannerView(context: Context) : ZXingScannerView(context) {
     private var autofocusPresence = false
 
     override fun setupCameraPreview(cameraWrapper: CameraWrapper?) {
-        cameraWrapper?.mCamera?.parameters?.let { parameters ->
-            try {
+        try {
+            cameraWrapper?.mCamera?.parameters?.let { parameters ->
                 autofocusPresence = parameters.supportedFocusModes.contains(Camera.Parameters.FOCUS_MODE_AUTO);
                 parameters.focusMode = Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE
                 cameraWrapper.mCamera.parameters = parameters
-            } catch (ex: Exception) {
-                callbackFocus = true
             }
+        } catch (ex: Exception) {
+            callbackFocus = true
+            Log.e("ZXingScannerView", "Error setting up autofocus", ex)
         }
         super.setupCameraPreview(cameraWrapper)
     }
